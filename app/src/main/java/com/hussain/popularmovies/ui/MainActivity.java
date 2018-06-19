@@ -39,18 +39,24 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
-        if (savedInstanceState != null) {
-            sortMovies(savedInstanceState.getInt("orderSelected",selectedOrder));
-        }
+        if(savedInstanceState == null) {
             Call<MoviesResponse> call = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
             getMovies(call);
-
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         outState.putInt("orderSelected", selectedOrder);
         super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            sortMovies(savedInstanceState.getInt("orderSelected", selectedOrder));
+        }
     }
 
     private int getSpan() {
@@ -86,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getMovies(Call call) {
+    private void getMovies(Call call) {
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {

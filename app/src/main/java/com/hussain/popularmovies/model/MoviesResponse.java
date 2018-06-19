@@ -8,7 +8,7 @@ public class MoviesResponse {
 
 
     @SerializedName("results")
-    private List<Movies> results;
+    private final List<Movies> results;
 
     public MoviesResponse(List results) {
 

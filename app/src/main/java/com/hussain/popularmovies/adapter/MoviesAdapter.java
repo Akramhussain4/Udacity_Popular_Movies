@@ -28,8 +28,8 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerViewHolder> {
 
-    private List<Movies> movies;
-    private Context context;
+    private final List<Movies> movies;
+    private final Context context;
 
     public MoviesAdapter(List<Movies> movies, Context context) {
         this.movies = movies;
@@ -81,9 +81,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ImageView thumb;
-        private TextView title;
-        private LinearLayout constraintLayout;
+        private final ImageView thumb;
+        private final TextView title;
+        private final LinearLayout constraintLayout;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);

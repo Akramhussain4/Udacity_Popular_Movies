@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 public class Movies {
 
     @SerializedName("poster_path")
-    private String posterPath;
+    private final String posterPath;
     @SerializedName("id")
     private Integer id;
     @SerializedName("original_title")
-    private String originalTitle;
+    private final String originalTitle;
 
 
     public Movies(String posterPath, Integer id, String originalTitle) {
