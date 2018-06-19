@@ -50,7 +50,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
         holder.title.setText(movies.get(position).getOriginalTitle());
         GlideApp.with(context)
                 .asBitmap()
-                .load("http://image.tmdb.org/t/p/w500/" + movies.get(position).getPosterPath())
+                .load(R.string.Image_Base_URL + movies.get(position).getPosterPath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.color.colorAccent)
                 .listener(new RequestListener<Bitmap>() {
@@ -89,17 +89,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
-            thumb = itemView.findViewById(R.id.imageView);
-            title = itemView.findViewById(R.id.movie_item_title);
-            constraintLayout = itemView.findViewById(R.id.movie_item_footer);
+            thumb = itemView.findViewById(R.id.movie_thumbnail);
+            title = itemView.findViewById(R.id.movie_title);
+            constraintLayout = itemView.findViewById(R.id.movie_title_holder);
             itemView.setOnClickListener(this);
         }
 
         @Override
-        public void onClick(View view)
-        {
+        public void onClick(View view) {
             Intent intent = new Intent(view.getContext(), DetailsActivity.class);
-            intent.putExtra("id",movies.get(getAdapterPosition()).getId());
+            intent.putExtra("id", movies.get(getAdapterPosition()).getId());
             view.getContext().startActivity(intent);
         }
     }

@@ -22,10 +22,6 @@ public class Movies {
         return posterPath;
     }
 
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -36,10 +32,6 @@ public class Movies {
 
     public String getOriginalTitle() {
         return originalTitle;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
     }
 
 }

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.model.Movies;
 import com.hussain.popularmovies.model.MoviesResponse;
 import com.hussain.popularmovies.adapter.MoviesAdapter;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
         if (savedInstanceState == null) {
-            Call<MoviesResponse> call = moviesInterface.getPopularMovies(NetworkUtils.API_KEY);
+            Call<MoviesResponse> call = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
             getMovies(call);
         } else {
             sortMovies(savedInstanceState.getInt("orderSelected", R.id.popular));
@@ -75,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
         this.orderSelected = orderSelected;
         switch (orderSelected) {
             case R.id.top_rated:
-                Call<MoviesResponse> getTopRatedMovies = moviesInterface.getTopRatedMovies(NetworkUtils.API_KEY);
+                Call<MoviesResponse> getTopRatedMovies = moviesInterface.getTopRatedMovies(BuildConfig.ApiKey);
                 getMovies(getTopRatedMovies);
                 break;
             case R.id.popular:
-                Call<MoviesResponse> getPopularMovies = moviesInterface.getPopularMovies(NetworkUtils.API_KEY);
+                Call<MoviesResponse> getPopularMovies = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
                 getMovies(getPopularMovies);
                 break;
         }

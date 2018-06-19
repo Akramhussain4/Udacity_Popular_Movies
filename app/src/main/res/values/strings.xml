@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="movie_thumbnail">movie_thumbnail</string>
+    <string name="release_date_label">Release Date</string>
+    <string name="rating_label">Rating</string>
+    <string name="movie_poster_desc">movie poster</string>
+    <string name="Image_Base_URL">http://image.tmdb.org/t/p/w500/</string>
 </resources>

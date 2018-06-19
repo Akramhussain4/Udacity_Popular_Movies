@@ -7,4 +7,5 @@ import com.bumptech.glide.module.AppGlideModule;
  * Required class for implementing Glide. Do not delete this
  */
 @GlideModule
-public final class AppGlideExtClass extends AppGlideModule {}
+public final class AppGlideExtClass extends AppGlideModule {
+}

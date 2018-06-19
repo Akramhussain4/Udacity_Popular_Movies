@@ -18,8 +18,4 @@ public class MoviesResponse {
     public List getResults() {
         return results;
     }
-
-    public void setResults(List results) {
-        this.results = results;
-    }
 }

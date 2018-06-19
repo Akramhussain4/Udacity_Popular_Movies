@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.model.DetailsResponse;
 import com.hussain.popularmovies.utils.GlideApp;
@@ -21,6 +22,8 @@ import retrofit2.Response;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    private static final String TAG = DetailsActivity.class.getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,36 +32,35 @@ public class DetailsActivity extends AppCompatActivity {
         TextView realDate = findViewById(R.id.release_date);
         TextView rating = findViewById(R.id.ratings);
         ImageView cover = findViewById(R.id.movie_cover);
-        ImageView thumb = findViewById(R.id.thumb);
+        ImageView thumb = findViewById(R.id.movie_thumb);
         ActionBar ab = getSupportActionBar();
         MoviesInterface moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
-        Call<DetailsResponse> call = moviesInterface.getMovieDetails(getIntent().getIntExtra("id",0),NetworkUtils.API_KEY);
+        Call<DetailsResponse> call = moviesInterface.getMovieDetails(getIntent().getIntExtra("id", 0), BuildConfig.ApiKey);
         call.enqueue(new Callback<DetailsResponse>() {
             @Override
             public void onResponse(@NonNull Call<DetailsResponse> call, @NonNull Response<DetailsResponse> response) {
                 DetailsResponse response1 = response.body();
-                String movieTitle = response.body().getTitle();
+                String movieTitle = response1.getTitle();
                 ab.setTitle(movieTitle);
                 GlideApp.with(getApplicationContext())
                         .asBitmap()
-                        .load("http://image.tmdb.org/t/p/w500/" + response.body().getBackdrop())
+                        .load(getString(R.string.Image_Base_URL) + response1.getBackdrop())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.color.colorAccent).into(cover);
                 GlideApp.with(getApplicationContext())
                         .asBitmap()
-                        .load("http://image.tmdb.org/t/p/w500/" + response.body().getPoster_path())
+                        .load(R.string.Image_Base_URL + response1.getPoster_path())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.color.colorAccent).into(thumb);
-                String overView = response.body().getOverview();
-               // moverView.setText(overView);
+                String overView = response1.getOverview();
+                moverView.setText(overView);
                 realDate.setText(response1.getRealDate());
                 rating.setText(response1.getVote_average());
             }
 
             @Override
             public void onFailure(@NonNull Call<DetailsResponse> call, @NonNull Throwable t) {
-                Log.d("----",t.toString());
-               // title.setText(t.toString());
+                Log.d(TAG, t.toString());
             }
         });
     }
