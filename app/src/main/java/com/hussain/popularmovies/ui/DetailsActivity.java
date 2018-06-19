@@ -33,7 +33,7 @@ public class DetailsActivity extends AppCompatActivity {
         TextView rating = findViewById(R.id.ratings);
         ImageView cover = findViewById(R.id.movie_cover);
         ImageView thumb = findViewById(R.id.movie_thumb);
-        ActionBar ab = getSupportActionBar();
+        ActionBar ab                                                                  = getSupportActionBar();
         MoviesInterface moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
         Call<DetailsResponse> call = moviesInterface.getMovieDetails(getIntent().getIntExtra("id", 0), BuildConfig.ApiKey);
         call.enqueue(new Callback<DetailsResponse>() {
@@ -46,12 +46,12 @@ public class DetailsActivity extends AppCompatActivity {
                         .asBitmap()
                         .load(getString(R.string.Image_Base_URL) + response1.getBackdrop())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.color.colorAccent).into(cover);
+                        .placeholder(R.drawable.loading).into(cover);
                 GlideApp.with(getApplicationContext())
                         .asBitmap()
-                        .load(R.string.Image_Base_URL + response1.getPoster_path())
+                        .load(getString(R.string.Image_Base_URL) + response1.getPoster_path())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.color.colorAccent).into(thumb);
+                        .placeholder(R.drawable.loading).into(thumb);
                 String overView = response1.getOverview();
                 moverView.setText(overView);
                 realDate.setText(response1.getRealDate());

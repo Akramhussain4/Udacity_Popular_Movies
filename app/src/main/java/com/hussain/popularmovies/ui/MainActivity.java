@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MoviesInterface moviesInterface;
-    private int orderSelected = R.id.popular;
+    private int selectedOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +39,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
-        if (savedInstanceState == null) {
+        if (savedInstanceState != null) {
+            sortMovies(savedInstanceState.getInt("orderSelected",selectedOrder));
+        }
             Call<MoviesResponse> call = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
             getMovies(call);
-        } else {
-            sortMovies(savedInstanceState.getInt("orderSelected", R.id.popular));
-        }
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putInt("orderSelected", selectedOrder);
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putInt("orderSelected", orderSelected);
     }
 
     private int getSpan() {
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sortMovies(int orderSelected) {
-        this.orderSelected = orderSelected;
+        this.selectedOrder = orderSelected;
         switch (orderSelected) {
             case R.id.top_rated:
                 Call<MoviesResponse> getTopRatedMovies = moviesInterface.getTopRatedMovies(BuildConfig.ApiKey);

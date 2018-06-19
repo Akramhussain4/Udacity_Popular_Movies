@@ -50,19 +50,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
         holder.title.setText(movies.get(position).getOriginalTitle());
         GlideApp.with(context)
                 .asBitmap()
-                .load(R.string.Image_Base_URL + movies.get(position).getPosterPath())
+                .load(context.getString(R.string.Image_Base_URL) + movies.get(position).getPosterPath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.color.colorAccent)
+                .placeholder(R.drawable.loading)
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-
                         if (resource != null) {
                             Palette p = Palette.from(resource).generate();
                             Palette.Swatch swatch = p.getVibrantSwatch();
