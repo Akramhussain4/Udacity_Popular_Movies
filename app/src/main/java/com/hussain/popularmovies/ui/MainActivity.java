@@ -2,7 +2,6 @@ package com.hussain.popularmovies.ui;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,10 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hussain.popularmovies.BuildConfig;
+import com.hussain.popularmovies.R;
+import com.hussain.popularmovies.adapter.MoviesAdapter;
 import com.hussain.popularmovies.model.Movies;
 import com.hussain.popularmovies.model.MoviesResponse;
-import com.hussain.popularmovies.adapter.MoviesAdapter;
-import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.utils.MoviesInterface;
 import com.hussain.popularmovies.utils.NetworkUtils;
 
@@ -39,24 +38,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Call<MoviesResponse> call = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
             getMovies(call);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        outState.putInt("orderSelected", selectedOrder);
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
+        } else {
             sortMovies(savedInstanceState.getInt("orderSelected", selectedOrder));
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("orderSelected", selectedOrder);
+        super.onSaveInstanceState(outState);
     }
 
     private int getSpan() {
