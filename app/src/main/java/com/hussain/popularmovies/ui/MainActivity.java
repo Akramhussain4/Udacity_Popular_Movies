@@ -1,5 +1,6 @@
 package com.hussain.popularmovies.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,21 +20,25 @@ import com.hussain.popularmovies.utils.NetworkUtils;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.onMovieItemClickListener {
 
-    private RecyclerView recyclerView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     private MoviesInterface moviesInterface;
     private int selectedOrder;
+    private MoviesAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerView = findViewById(R.id.recycler_view);
+        ButterKnife.bind(this);
         GridLayoutManager layoutManager = new GridLayoutManager(this, getSpan());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -90,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
                 List<Movies> movies = response.body().getResults();
-                recyclerView.setAdapter(new MoviesAdapter(movies, getApplicationContext()));
+                mAdapter = new MoviesAdapter(movies, getApplication(), MainActivity.this);
+                recyclerView.setAdapter(mAdapter);
             }
 
             @Override
@@ -98,5 +104,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onMovieItemClick(int clickIndex) {
+        List<Movies> movies = mAdapter.getMovies();
+        Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
+        intent.putExtra("movieDetail", movies.get(clickIndex).getId());
+        startActivity(intent);
     }
 }

@@ -5,12 +5,11 @@ import com.google.gson.annotations.SerializedName;
 public class Movies {
 
     @SerializedName("poster_path")
-    private final String posterPath;
+    private String posterPath;
     @SerializedName("id")
     private Integer id;
     @SerializedName("original_title")
-    private final String originalTitle;
-
+    private String originalTitle;
 
     public Movies(String posterPath, Integer id, String originalTitle) {
         this.posterPath = posterPath;
@@ -20,6 +19,10 @@ public class Movies {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
     public Integer getId() {
@@ -34,4 +37,7 @@ public class Movies {
         return originalTitle;
     }
 
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
 }

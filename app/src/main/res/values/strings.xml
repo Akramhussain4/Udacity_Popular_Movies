@@ -8,4 +8,5 @@
     <string name="sort_menu_title">sort</string>
     <string name="top_rated_menu">Top Rated</string>
     <string name="most_popular_menu">Most Popular</string>
+    <string name="reviews_title">Reviews</string>
 </resources>
