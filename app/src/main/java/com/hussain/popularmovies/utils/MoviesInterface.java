@@ -3,6 +3,7 @@ package com.hussain.popularmovies.utils;
 import com.hussain.popularmovies.model.DetailsResponse;
 import com.hussain.popularmovies.model.MoviesResponse;
 import com.hussain.popularmovies.model.ReviewsResponse;
+import com.hussain.popularmovies.model.TrailerResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -23,4 +24,7 @@ public interface MoviesInterface {
 
     @GET("movie/{id}/reviews")
     Call<ReviewsResponse> getReviews(@Path("id") long id, @Query("api_key") String apiKey);
+
+    @GET("movie/{id}/videos")
+    Call<TrailerResponse> getTrailers(@Path("id") long id, @Query("api_key") String apiKey);
 }

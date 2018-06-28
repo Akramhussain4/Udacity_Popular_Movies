@@ -2,10 +2,11 @@ package com.hussain.popularmovies.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,12 +15,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.model.DetailsResponse;
-import com.hussain.popularmovies.model.ReviewsResponse;
 import com.hussain.popularmovies.utils.GlideApp;
 import com.hussain.popularmovies.utils.MoviesInterface;
 import com.hussain.popularmovies.utils.NetworkUtils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,47 +41,59 @@ public class DetailsActivity extends AppCompatActivity {
     ImageView mMovieThumb;
     @BindView(R.id.movie_favorite_button)
     ImageButton mFavButton;
-    @BindView(R.id.author_name)
-    TextView author;
-    @BindView(R.id.review)
-    TextView review;
+
+    private int movieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
-
         MoviesInterface moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
-        int movieId = getIntent().getIntExtra("movieDetail", 0);
+        movieId = getIntent().getIntExtra("movieDetail", 0);
         Log.d(TAG, String.valueOf(movieId));
         Call<DetailsResponse> call = moviesInterface.getMovieDetails(movieId, BuildConfig.ApiKey);
-        Call<ReviewsResponse> reviewCall = moviesInterface.getReviews(movieId,BuildConfig.ApiKey);
-        updateUI(call,reviewCall);
+        updateUI(call);
     }
 
-    public void updateUI(Call call, Call reviewCall){
+    public void updateUI(Call call){
+        Bundle bundle = new Bundle();
+        bundle.putInt("movieId", movieId);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        TrailersFragment trailersFragment = new TrailersFragment();
+        trailersFragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.trailerContainer, trailersFragment);
+        fragmentTransaction.commit();
+
         call.enqueue(new Callback<DetailsResponse>() {
             @Override
             public void onResponse(@NonNull Call<DetailsResponse> call, @NonNull Response<DetailsResponse> response) {
-                DetailsResponse response1 = response.body();
-                String movieTitle = response1.getTitle();
+                DetailsResponse detailsResponse = response.body();
+                String movieTitle = null;
+                if (detailsResponse != null) {
+                    movieTitle = detailsResponse.getTitle();
+                }
                 ActionBar ab = getSupportActionBar();
-                ab.setTitle(movieTitle);
+                if (ab != null) {
+                    ab.setTitle(movieTitle);
+                }
+                if (detailsResponse != null) {
+                    GlideApp.with(getApplicationContext())
+                            .asBitmap()
+                            .load(getString(R.string.Image_Base_URL) + detailsResponse.getBackdrop())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.loading).into(mMovieCover);
+                }
                 GlideApp.with(getApplicationContext())
                         .asBitmap()
-                        .load(getString(R.string.Image_Base_URL) + response1.getBackdrop())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.drawable.loading).into(mMovieCover);
-                GlideApp.with(getApplicationContext())
-                        .asBitmap()
-                        .load(getString(R.string.Image_Base_URL) + response1.getPoster_path())
+                        .load(getString(R.string.Image_Base_URL) + detailsResponse.getPoster_path())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.drawable.loading).into(mMovieThumb);
-                String overView = response1.getOverview();
+                String overView = detailsResponse.getOverview();
                 mMovieOverview.setText(overView);
-                mReleaseDate.setText(response1.getRealDate());
-                mRating.setText(response1.getVote_average());
+                mReleaseDate.setText(detailsResponse.getRealDate());
+                mRating.setText(detailsResponse.getVote_average());
             }
 
             @Override
@@ -91,26 +101,5 @@ public class DetailsActivity extends AppCompatActivity {
                 Log.d(TAG, t.toString());
             }
         });
-
-        reviewCall.enqueue(new Callback<ReviewsResponse>() {
-            @Override
-            public void onResponse(Call <ReviewsResponse> call, Response<ReviewsResponse> response) {
-                ReviewsResponse reviewsResponse = response.body();
-                List<ReviewsResponse.Reviews> res = reviewsResponse.getReviews();
-                for(ReviewsResponse.Reviews reviews : res ) {
-                    author.setText("Author:" + reviews.getAuthor());
-                    review.setText(reviews.getContent());
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
-    }
-
-    public void onFavClick(View view) {
-
     }
 }

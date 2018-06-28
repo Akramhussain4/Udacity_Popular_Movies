@@ -9,4 +9,11 @@
     <string name="top_rated_menu">Top Rated</string>
     <string name="most_popular_menu">Most Popular</string>
     <string name="reviews_title">Reviews</string>
+
+    <string name="title_overview">Overview</string>
+    <string name="title_trailers">Trailers</string>
+    <string name="favourite_button">favourite button</string>
+    <string name="review_label">Review:</string>
+    <string name="author_label">Author:</string>
+    <string name="trailer_play_button">Trailer_play_button</string>
 </resources>

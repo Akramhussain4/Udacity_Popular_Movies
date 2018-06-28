@@ -71,6 +71,15 @@
             app:layout_constraintTop_toBottomOf="@+id/movie_thumb" />
 
         <TextView
+            android:id="@+id/textView3"
+            style="@style/TitleText"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/title_overview"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <TextView
             android:id="@+id/movie_overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,11 +87,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:gravity="fill_horizontal"
-            android:padding="16dp"
+            android:padding="8dp"
             android:textSize="@dimen/text_size_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view" />
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <TextView
             android:id="@+id/textView"
@@ -116,7 +125,7 @@
             android:layout_height="25dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp"
-            android:onClick="onFavClick"
+            android:contentDescription="@string/favourite_button"
             android:scaleType="fitXY"
             android:src="@drawable/selector_favorite_button"
             android:tint="@color/colorPrimary"
@@ -124,42 +133,26 @@
             app:layout_constraintStart_toStartOf="@+id/textView2"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/chango"
-            android:text="@string/reviews_title"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/divider_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_overview" />
 
-        <TextView
-            android:id="@+id/author_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-        <TextView
-            android:id="@+id/review"
+        <FrameLayout
+            android:id="@+id/trailerContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/author_name" />
+            app:layout_constraintTop_toBottomOf="@+id/view1" />
     </android.support.constraint.ConstraintLayout>
-
-
 </ScrollView>
