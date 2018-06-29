@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -21,6 +20,7 @@ import com.hussain.popularmovies.utils.NetworkUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +41,9 @@ public class DetailsActivity extends AppCompatActivity {
     ImageView mMovieThumb;
     @BindView(R.id.movie_favorite_button)
     ImageButton mFavButton;
-
+    @BindView(R.id.title_text)
+    TextView mTitle;
+    private int counter = 0;
     private int movieId;
 
     @Override
@@ -56,7 +58,7 @@ public class DetailsActivity extends AppCompatActivity {
         updateUI(call);
     }
 
-    public void updateUI(Call call){
+    private void updateUI(Call call) {
         Bundle bundle = new Bundle();
         bundle.putInt("movieId", movieId);
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -70,14 +72,6 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<DetailsResponse> call, @NonNull Response<DetailsResponse> response) {
                 DetailsResponse detailsResponse = response.body();
-                String movieTitle = null;
-                if (detailsResponse != null) {
-                    movieTitle = detailsResponse.getTitle();
-                }
-                ActionBar ab = getSupportActionBar();
-                if (ab != null) {
-                    ab.setTitle(movieTitle);
-                }
                 if (detailsResponse != null) {
                     GlideApp.with(getApplicationContext())
                             .asBitmap()
@@ -92,6 +86,7 @@ public class DetailsActivity extends AppCompatActivity {
                         .placeholder(R.drawable.loading).into(mMovieThumb);
                 String overView = detailsResponse.getOverview();
                 mMovieOverview.setText(overView);
+                mTitle.setText(detailsResponse.getTitle());
                 mReleaseDate.setText(detailsResponse.getRealDate());
                 mRating.setText(detailsResponse.getVote_average());
             }
@@ -101,5 +96,17 @@ public class DetailsActivity extends AppCompatActivity {
                 Log.d(TAG, t.toString());
             }
         });
+    }
+
+    @OnClick(R.id.movie_favorite_button)
+    public void onclick() {
+        if (counter == 0) {
+            mFavButton.setImageResource(R.drawable.ic_favorite_full);
+        }
+        if (counter == 1) {
+            mFavButton.setImageResource(R.drawable.ic_favorite_border);
+            counter = -1;
+        }
+        counter++;
     }
 }

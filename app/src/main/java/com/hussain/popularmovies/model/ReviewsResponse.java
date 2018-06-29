@@ -17,10 +17,6 @@ public class ReviewsResponse {
         return reviews;
     }
 
-    public void setReviews(List<Reviews> reviews) {
-        this.reviews = reviews;
-    }
-
     public class Reviews {
         @SerializedName("author")
         private String author;
@@ -34,10 +30,6 @@ public class ReviewsResponse {
 
         public String getAuthor() {
             return author;
-        }
-
-        public void setAuthor(String author) {
-            this.author = author;
         }
 
         public String getContent() {

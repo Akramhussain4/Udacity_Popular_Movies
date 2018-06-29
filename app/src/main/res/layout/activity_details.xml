@@ -40,25 +40,19 @@
             android:id="@+id/release_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="36dp"
             android:textSize="@dimen/text_size_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/movie_cover" />
+            app:layout_constraintTop_toTopOf="@+id/textView" />
 
         <TextView
             android:id="@+id/ratings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:textSize="@dimen/text_size_label"
-            app:layout_constraintEnd_toEndOf="@+id/release_date"
             app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/release_date" />
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
 
         <View
             android:id="@+id/view"
@@ -97,24 +91,22 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/release_date_label"
             android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textSize="@dimen/text_size_label"
-            app:layout_constraintBottom_toBottomOf="@+id/release_date"
             app:layout_constraintStart_toEndOf="@+id/movie_thumb"
-            app:layout_constraintTop_toTopOf="@+id/release_date" />
+            app:layout_constraintTop_toBottomOf="@+id/title_text" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/rating_label"
             android:textSize="@dimen/text_size_label"
-            app:layout_constraintBottom_toBottomOf="@+id/ratings"
             app:layout_constraintStart_toEndOf="@+id/movie_thumb"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -123,14 +115,13 @@
             style="@style/Widget.AppCompat.Light.ActionButton"
             android:layout_width="48dp"
             android:layout_height="25dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:contentDescription="@string/favourite_button"
             android:scaleType="fitXY"
             android:src="@drawable/selector_favorite_button"
             android:tint="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="@+id/textView2"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintStart_toEndOf="@+id/movie_thumb"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 
@@ -154,5 +145,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view1" />
+
+        <TextView
+            android:id="@+id/title_text"
+            style="@style/TitleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/movie_thumb"
+            app:layout_constraintTop_toBottomOf="@+id/movie_cover" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

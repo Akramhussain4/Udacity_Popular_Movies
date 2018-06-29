@@ -18,20 +18,33 @@ public class TrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final List<TrailerResponse.Trailers> trailersList;
     private final Context context;
+    private final OnTrailerClickListener trailerClickListener;
 
-    static class TrailerHolder extends RecyclerView.ViewHolder {
+    public TrailerAdapter(Context context, List<TrailerResponse.Trailers> trailersList, OnTrailerClickListener clickListener) {
+        this.trailersList = trailersList;
+        this.context = context;
+        this.trailerClickListener = clickListener;
+    }
+
+    class TrailerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.trailer_title)
         TextView mTrailerTitle;
 
         private TrailerHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             ButterKnife.bind(this, view);
+        }
+
+        @Override
+        public void onClick(View view) {
+            trailerClickListener.onTrailerClick(getAdapterPosition());
         }
     }
 
-    public TrailerAdapter(Context context, List<TrailerResponse.Trailers> trailersList) {
-        this.trailersList = trailersList;
-        this.context = context;
+
+    public interface OnTrailerClickListener {
+        void onTrailerClick(int position);
     }
 
     @Override

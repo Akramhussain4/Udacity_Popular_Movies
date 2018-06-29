@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,6 +28,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.onMovieItemClickListener {
+
+    private static final String TAG = MainActivity.class.getName();
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
 
             @Override
             public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
-
+                Log.d(TAG, t.toString());
             }
         });
     }

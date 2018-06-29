@@ -24,9 +24,9 @@ import butterknife.ButterKnife;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerViewHolder> {
 
-    private List<Movies> movies;
-    private Context context;
-    private onMovieItemClickListener onMovieItemClickListener;
+    private final List<Movies> movies;
+    private final Context context;
+    private final onMovieItemClickListener onMovieItemClickListener;
 
     public interface onMovieItemClickListener {
         void onMovieItemClick(int clickIndex);

@@ -15,5 +15,7 @@
     <string name="favourite_button">favourite button</string>
     <string name="review_label">Review:</string>
     <string name="author_label">Author:</string>
-    <string name="trailer_play_button">Trailer_play_button</string>
+    <string name="favorite_menu">Favorite</string>
+    <string name="checkout_movie">Check out this movie!</string>
+    <string name="youtube_url">http://www.youtube.com/watch?v=</string>
 </resources>
