@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
         recyclerView.setHasFixedSize(true);
         moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
         if (savedInstanceState == null) {
-            Call<MoviesResponse> call = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
-            getMovies(call);
+            sortMovies(R.id.popular);
         } else {
             sortMovies(savedInstanceState.getInt("orderSelected", selectedOrder));
         }
