@@ -50,7 +50,7 @@ public class TrailersFragment extends Fragment implements TrailerAdapter.OnTrail
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        movieID = this.getArguments().getInt("movieId");
+        movieID = Integer.parseInt(this.getArguments().getString("movieId"));
         mContext = getContext();
         setHasOptionsMenu(true);
         updateUI();

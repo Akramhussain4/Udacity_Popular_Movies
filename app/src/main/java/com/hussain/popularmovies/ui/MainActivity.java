@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.adapter.MoviesAdapter;
+import com.hussain.popularmovies.database.AppDatabase;
 import com.hussain.popularmovies.model.Movies;
 import com.hussain.popularmovies.model.MoviesResponse;
 import com.hussain.popularmovies.utils.MoviesInterface;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
     private MoviesInterface moviesInterface;
     private int selectedOrder;
     private MoviesAdapter mAdapter;
-
+    private AppDatabase mDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
         } else {
             sortMovies(savedInstanceState.getInt("orderSelected", selectedOrder));
         }
+        mDb = AppDatabase.getInstance(getApplicationContext());
     }
 
     @Override
@@ -88,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
             case R.id.popular:
                 Call<MoviesResponse> getPopularMovies = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
                 getMovies(getPopularMovies);
+                break;
+            case R.id.favorite:
+                mAdapter = new MoviesAdapter(mDb.moviesDao().loadAllMovies(), getApplicationContext(), MainActivity.this);
+                recyclerView.setAdapter(mAdapter);
                 break;
         }
     }
