@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
+import com.hussain.popularmovies.adapter.FavoritesAdapter;
 import com.hussain.popularmovies.adapter.MoviesAdapter;
 import com.hussain.popularmovies.database.AppDatabase;
 import com.hussain.popularmovies.model.Movies;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
     private int selectedOrder;
     private MoviesAdapter mAdapter;
     private AppDatabase mDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
                 getMovies(getPopularMovies);
                 break;
             case R.id.favorite:
-                mAdapter = new MoviesAdapter(mDb.moviesDao().loadAllMovies(), getApplicationContext(), MainActivity.this);
-                recyclerView.setAdapter(mAdapter);
+                FavoritesAdapter favoritesAdapter = new FavoritesAdapter(mDb.moviesDao().loadAllMovies(),MainActivity.this);
+                recyclerView.setAdapter(favoritesAdapter);
                 break;
         }
     }

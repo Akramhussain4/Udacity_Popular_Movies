@@ -1,13 +1,12 @@
 package com.hussain.popularmovies.database;
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.hussain.popularmovies.model.Movies;
+import com.hussain.popularmovies.model.Favorites;
 
 import java.util.List;
 
@@ -15,14 +14,17 @@ import java.util.List;
 public interface MoviesDao {
 
     @Query("SELECT * FROM movies")
-    List<Movies> loadAllMovies();
+    List<Favorites> loadAllMovies();
 
     @Insert
-    void insertMovie(Movies movies);
+    void insertMovie(Favorites movies);
+
+    @Query("SELECT * FROM movies WHERE id = :id AND isfavorite = 1")
+    List<Favorites> getFavorites(String id);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateMovie(Movies movies);
+    void updateMovie(Favorites movies);
 
-    @Delete
-    void deleteMovie(Movies movies);
+    @Query("DELETE FROM movies WHERE id = :id")
+    void deleteMovie(String id);
 }
