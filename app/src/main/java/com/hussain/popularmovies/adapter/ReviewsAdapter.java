@@ -17,20 +17,20 @@ import butterknife.ButterKnife;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-private final List<ReviewsResponse.Reviews> reviewList;
-private final Context context;
+    private final List<ReviewsResponse.Reviews> reviewList;
+    private final Context context;
 
-static class ReviewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.author_name)
-    TextView mAuthor;
-    @BindView(R.id.review)
-    TextView mReview;
+    static class ReviewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.author_name)
+        TextView mAuthor;
+        @BindView(R.id.review)
+        TextView mReview;
 
-    private ReviewHolder(View view) {
-        super(view);
-        ButterKnife.bind(this, view);
+        private ReviewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
     }
-}
 
     public ReviewsAdapter(Context context, List<ReviewsResponse.Reviews> reviewList) {
         this.reviewList = reviewList;

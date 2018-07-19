@@ -28,7 +28,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
     private List<Movies> movies;
     private Context context;
     private onMovieItemClickListener onMovieItemClickListener;
-    private CircularProgressDrawable circularProgressDrawable;
+
     public interface onMovieItemClickListener {
         void onMovieItemClick(int clickIndex);
     }
@@ -38,9 +38,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
         this.context = context;
         this.onMovieItemClickListener = clickListener;
         notifyDataSetChanged();
-    }
-
-    public MoviesAdapter() {
     }
 
     public List<Movies> getMovies() {
@@ -56,7 +53,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
-        circularProgressDrawable = new CircularProgressDrawable(context);
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
         circularProgressDrawable.setStrokeWidth(15f);
         circularProgressDrawable.setCenterRadius(50f);
         circularProgressDrawable.start();
@@ -71,7 +68,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
                             if (swatch != null) {
                                 holder.mLinearLayout.setBackgroundColor(swatch.getRgb());
                                 holder.mTitle.setTextColor(swatch.getBodyTextColor());
-                                // holder.mFavButton.setColorFilter(swatch.getBodyTextColor(), PorterDuff.Mode.MULTIPLY);
                             }
                         })).into(holder.mThumbnail);
     }

@@ -1,5 +1,6 @@
 package com.hussain.popularmovies.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -14,13 +15,14 @@ import android.widget.TextView;
 import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.database.AppDatabase;
+import com.hussain.popularmovies.database.MovieViewModel;
+import com.hussain.popularmovies.database.ViewModelFactory;
 import com.hussain.popularmovies.model.DetailsResponse;
 import com.hussain.popularmovies.model.Favorites;
+import com.hussain.popularmovies.utils.AppExecutors;
 import com.hussain.popularmovies.utils.GlideUtils;
 import com.hussain.popularmovies.utils.MoviesInterface;
 import com.hussain.popularmovies.utils.NetworkUtils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,30 +60,41 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
         mDb = AppDatabase.getInstance(getApplicationContext());
-        MoviesInterface moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
         movieId = getIntent().getStringExtra("movieDetail");
-        Call<DetailsResponse> call = moviesInterface.getMovieDetails(Long.parseLong(movieId), BuildConfig.ApiKey);
         circularProgressDrawable = new CircularProgressDrawable(this);
         circularProgressDrawable.setStrokeWidth(15f);
         circularProgressDrawable.setCenterRadius(50f);
         circularProgressDrawable.start();
-
-        updateUI(call);
-        setFavorite();
+        setDetails();
     }
 
-    private void setFavorite() {
-        List<Favorites> isFavoritesList = mDb.moviesDao().getFavorites(movieId);
-        if (isFavoritesList.size() > 0) {
-            mFavButton.setImageResource(R.drawable.ic_favorite_full);
-            GlideUtils.getImage(getApplicationContext(), mMovieCover, isFavoritesList.get(0).getPoster(), circularProgressDrawable);
-            GlideUtils.getImage(getApplicationContext(), mMovieThumb, isFavoritesList.get(0).getThumb(), circularProgressDrawable);
-            mMovieOverview.setText(isFavoritesList.get(0).getOverview());
-            mTitle.setText(isFavoritesList.get(0).getTitle());
-            mReleaseDate.setText(isFavoritesList.get(0).getDate());
-            mRating.setText(isFavoritesList.get(0).getRating());
-            isFav = true;
+    public void setDetails(){
+        if(NetworkUtils.isNetworkAvailable(this)){
+            MoviesInterface moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
+            Call<DetailsResponse> call = moviesInterface.getMovieDetails(Long.parseLong(movieId), BuildConfig.ApiKey);
+            updateUI(call);
         }
+        else {
+            setFavorite();
+        }
+    }
+
+
+    private void setFavorite() {
+        ViewModelFactory factory = new ViewModelFactory(mDb, movieId);
+        final MovieViewModel viewModel = ViewModelProviders.of(this, factory).get(MovieViewModel.class);
+        viewModel.getFavorite().observe(this, favorites -> {
+            if (favorites.size() > 0) {
+                mFavButton.setImageResource(R.drawable.ic_favorite_full);
+                GlideUtils.getImage(getApplicationContext(), mMovieCover, favorites.get(0).getPoster(), circularProgressDrawable);
+                GlideUtils.getImage(getApplicationContext(), mMovieThumb, favorites.get(0).getThumb(), circularProgressDrawable);
+                mMovieOverview.setText(favorites.get(0).getOverview());
+                mTitle.setText(favorites.get(0).getTitle());
+                mReleaseDate.setText(favorites.get(0).getDate());
+                mRating.setText(favorites.get(0).getRating());
+                isFav = true;
+            }
+        });
     }
 
     private void updateUI(Call call) {
@@ -124,12 +137,13 @@ public class DetailsActivity extends AppCompatActivity {
     public void handleFavorite() {
         mFavButton.setImageResource(R.drawable.ic_favorite_full);
         Favorites favorites = new Favorites(movieId, Thumbnail, Cover, Overview, Rating, Date, Title, true);
-        mDb.moviesDao().insertMovie(favorites);
+        AppExecutors.getInstance().getDiskIO().execute(() -> mDb.moviesDao().insertMovie(favorites));
+
     }
 
     public void handleUnFavorite() {
         mFavButton.setImageResource(R.drawable.ic_favorite_border);
-        mDb.moviesDao().deleteMovie(movieId);
+        AppExecutors.getInstance().getDiskIO().execute(() -> mDb.moviesDao().deleteMovie(movieId));
     }
 
     @OnClick(R.id.movie_favorite_button)

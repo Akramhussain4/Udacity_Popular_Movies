@@ -1,5 +1,6 @@
 package com.hussain.popularmovies.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.adapter.FavoritesAdapter;
 import com.hussain.popularmovies.adapter.MoviesAdapter;
-import com.hussain.popularmovies.database.AppDatabase;
+import com.hussain.popularmovies.database.MainViewModel;
 import com.hussain.popularmovies.model.Movies;
 import com.hussain.popularmovies.model.MoviesResponse;
 import com.hussain.popularmovies.utils.MoviesInterface;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
     private MoviesInterface moviesInterface;
     private int selectedOrder;
     private MoviesAdapter mAdapter;
-    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +49,25 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
-        if (savedInstanceState == null) {
-            sortMovies(R.id.popular);
+        setMovies(savedInstanceState);
+    }
+
+    private void setMovies(Bundle savedInstanceState) {
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            if (savedInstanceState == null) {
+                sortMovies(R.id.popular);
+            } else {
+                sortMovies(savedInstanceState.getInt("orderSelected", selectedOrder));
+            }
         } else {
-            sortMovies(savedInstanceState.getInt("orderSelected", selectedOrder));
+            sortMovies(R.id.favorite);
         }
-        mDb = AppDatabase.getInstance(getApplicationContext());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setMovies(null);
     }
 
     @Override
@@ -94,8 +107,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
                 getMovies(getPopularMovies);
                 break;
             case R.id.favorite:
-                FavoritesAdapter favoritesAdapter = new FavoritesAdapter(mDb.moviesDao().loadAllMovies(),MainActivity.this);
-                recyclerView.setAdapter(favoritesAdapter);
+                MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+                viewModel.getFavorites().observe(this, favorites1 -> {
+                    FavoritesAdapter favoritesAdapter = new FavoritesAdapter(favorites1, MainActivity.this);
+                    recyclerView.setAdapter(favoritesAdapter);
+                });
                 break;
         }
     }

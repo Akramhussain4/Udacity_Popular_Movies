@@ -53,7 +53,15 @@ public class TrailersFragment extends Fragment implements TrailerAdapter.OnTrail
         movieID = Integer.parseInt(this.getArguments().getString("movieId"));
         mContext = getContext();
         setHasOptionsMenu(true);
-        updateUI();
+        checkNetwork();
+    }
+
+    private void checkNetwork() {
+        if (NetworkUtils.isNetworkAvailable(getContext())) {
+            updateUI();
+        } else {
+            getActivity().getFragmentManager().popBackStack();
+        }
     }
 
     @Override
@@ -87,10 +95,12 @@ public class TrailersFragment extends Fragment implements TrailerAdapter.OnTrail
             @Override
             public void onResponse(@NonNull Call<TrailerResponse> call, @NonNull Response<TrailerResponse> response) {
                 TrailerResponse trailerResponse = response.body();
-                trailers = trailerResponse.getTrailersList();
-                TrailerAdapter trailerAdapter = new TrailerAdapter(mContext, trailers, TrailersFragment.this);
-                trailersRecycler.setLayoutManager(new LinearLayoutManager(mContext));
-                trailersRecycler.setAdapter(trailerAdapter);
+                if (trailerResponse != null) {
+                    trailers = trailerResponse.getTrailersList();
+                    TrailerAdapter trailerAdapter = new TrailerAdapter(mContext, trailers, TrailersFragment.this);
+                    trailersRecycler.setLayoutManager(new LinearLayoutManager(mContext));
+                    trailersRecycler.setAdapter(trailerAdapter);
+                }
             }
 
             @Override
