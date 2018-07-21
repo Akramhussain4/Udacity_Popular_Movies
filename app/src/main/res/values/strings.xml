@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="movie_thumbnail">movie_thumbnail</string>
+    <string name="release_date_label">Release Date: </string>
+    <string name="rating_label">Rating: </string>
+    <string name="movie_poster_desc">movie poster</string>
+    <string name="Image_Base_URL">http://image.tmdb.org/t/p/w500/</string>
+    <string name="sort_menu_title">sort</string>
+    <string name="top_rated_menu">Top Rated</string>
+    <string name="most_popular_menu">Most Popular</string>
+    <string name="reviews_title">Reviews</string>
+
+    <string name="title_overview">Overview</string>
+    <string name="title_trailers">Trailers</string>
+    <string name="favourite_button">favourite button</string>
+    <string name="review_label">Review:</string>
+    <string name="author_label">Author:</string>
+    <string name="favorite_menu">Favorite</string>
+    <string name="checkout_movie">Check out this movie!</string>
+    <string name="youtube_url">http://www.youtube.com/watch?v=</string>
+</resources>
