@@ -80,8 +80,11 @@ public class DetailsActivity extends AppCompatActivity {
             else if(favorites!=null && !NetworkUtils.isNetworkAvailable(this)){
                 setFavorite(favorites);
             }
-            else if (NetworkUtils.isNetworkAvailable(this)){
+            else if (favorites == null && NetworkUtils.isNetworkAvailable(this)){
                 makeNetworkCall();
+            }
+            else {
+                setFavorite(favorites);
             }
         });
     }
@@ -151,7 +154,6 @@ public class DetailsActivity extends AppCompatActivity {
         mFavButton.setImageResource(R.drawable.ic_favorite_full);
         Favorites favorites = new Favorites(movieId, Thumbnail, Cover, Overview, Rating, Date, Title, true);
         AppExecutors.getInstance().getDiskIO().execute(() -> mDb.moviesDao().insertMovie(favorites));
-        checkIfFav();
     }
 
     public void handleUnFavorite() {
