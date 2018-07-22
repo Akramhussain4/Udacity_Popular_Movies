@@ -5,17 +5,15 @@ import android.arch.lifecycle.ViewModel;
 
 import com.hussain.popularmovies.model.Favorites;
 
-import java.util.List;
-
 public class MovieViewModel extends ViewModel {
 
-    private LiveData<List<Favorites>> favorite;
+    private LiveData<Favorites> favorite;
 
     public MovieViewModel(AppDatabase database, String id){
         favorite = database.moviesDao().getFavorites(id);
     }
 
-    public LiveData<List<Favorites>> getFavorite() {
+    public LiveData<Favorites> getFavorite() {
         return favorite;
     }
 }
