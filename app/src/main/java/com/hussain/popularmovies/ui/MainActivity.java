@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
     private MoviesInterface moviesInterface;
     private MoviesAdapter mAdapter;
     private ArrayList<Movies> movies;
+    @BindView(R.id.textView4)
+    TextView noFav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,16 +100,26 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
             case R.id.top_rated:
                 Call<MoviesResponse> getTopRatedMovies = moviesInterface.getTopRatedMovies(BuildConfig.ApiKey);
                 getMovies(getTopRatedMovies);
+                noFav.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
                 break;
             case R.id.popular:
                 Call<MoviesResponse> getPopularMovies = moviesInterface.getPopularMovies(BuildConfig.ApiKey);
                 getMovies(getPopularMovies);
+                noFav.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
                 break;
             case R.id.favorite:
                 MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
                 viewModel.getFavorites().observe(this, favorites1 -> {
-                    FavoritesAdapter favoritesAdapter = new FavoritesAdapter(favorites1, MainActivity.this);
-                    recyclerView.setAdapter(favoritesAdapter);
+                    if(favorites1.size()!=0) {
+                        FavoritesAdapter favoritesAdapter = new FavoritesAdapter(favorites1, MainActivity.this);
+                        recyclerView.setAdapter(favoritesAdapter);
+                    }
+                    else {
+                        noFav.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.INVISIBLE);
+                    }
                 });
                 break;
         }

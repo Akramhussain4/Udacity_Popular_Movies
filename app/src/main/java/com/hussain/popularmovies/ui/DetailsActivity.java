@@ -76,18 +76,14 @@ public class DetailsActivity extends AppCompatActivity {
                 isFav =true;
                 makeNetworkCall();
                 setFavorite(favorites);
-                Toast.makeText(this,"if #1",Toast.LENGTH_LONG).show();
             }
             else if(favorites!=null && !NetworkUtils.isNetworkAvailable(this)){
                 setFavorite(favorites);
-                Toast.makeText(this,"esle if #1",Toast.LENGTH_LONG).show();
             }
             else if (favorites == null && NetworkUtils.isNetworkAvailable(this)){
                 makeNetworkCall();
-                Toast.makeText(this,"esle if #2",Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(this,"esle #1",Toast.LENGTH_LONG).show();
                 setFavorite(favorites);
             }
         });
