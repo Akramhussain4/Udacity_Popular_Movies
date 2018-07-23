@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
@@ -51,7 +50,7 @@ public class DetailsActivity extends AppCompatActivity {
     ImageButton mFavButton;
     @BindView(R.id.title_text)
     TextView mTitle;
-    private String movieId, Thumbnail, Cover, Overview, Rating, Date, Title;
+    private String movieId, BackCover, FrontPoster, Overview, Rating, Date, Title;
     private AppDatabase mDb;
     private boolean isFav = false;
     private CircularProgressDrawable circularProgressDrawable;
@@ -67,32 +66,27 @@ public class DetailsActivity extends AppCompatActivity {
         checkIfFav();
     }
 
-    private void checkIfFav(){
+    private void checkIfFav() {
         ViewModelFactory factory = new ViewModelFactory(mDb, movieId);
         final MovieViewModel viewModel = ViewModelProviders.of(this, factory).get(MovieViewModel.class);
         viewModel.getFavorite().observe(this, favorites -> {
-            if (favorites!=null && NetworkUtils.isNetworkAvailable(this)) {
+            if (favorites != null && NetworkUtils.isNetworkAvailable(this)) {
                 mFavButton.setImageResource(R.drawable.ic_favorite_full);
-                isFav =true;
+                isFav = true;
                 makeNetworkCall();
+            } else if (favorites != null && !NetworkUtils.isNetworkAvailable(this)) {
                 setFavorite(favorites);
-            }
-            else if(favorites!=null && !NetworkUtils.isNetworkAvailable(this)){
-                setFavorite(favorites);
-            }
-            else if (favorites == null && NetworkUtils.isNetworkAvailable(this)){
+            } else if (favorites == null && NetworkUtils.isNetworkAvailable(this)) {
                 makeNetworkCall();
-            }
-            else {
+            } else {
                 setFavorite(favorites);
             }
         });
     }
 
 
-
-    public void makeNetworkCall(){
-        if(NetworkUtils.isNetworkAvailable(this)){
+    private void makeNetworkCall() {
+        if (NetworkUtils.isNetworkAvailable(this)) {
             MoviesInterface moviesInterface = NetworkUtils.buildUrl().create(MoviesInterface.class);
             Call<DetailsResponse> call = moviesInterface.getMovieDetails(Long.parseLong(movieId), BuildConfig.ApiKey);
             updateUI(call);
@@ -103,13 +97,19 @@ public class DetailsActivity extends AppCompatActivity {
     private void setFavorite(Favorites favorites) {
         if (favorites != null) {
             mFavButton.setImageResource(R.drawable.ic_favorite_full);
-            GlideUtils.getImage(getApplicationContext(), mMovieCover, favorites.getPoster(), circularProgressDrawable);
-            GlideUtils.getImage(getApplicationContext(), mMovieThumb, favorites.getThumb(), circularProgressDrawable);
-            mMovieOverview.setText(favorites.getOverview());
-            mTitle.setText(favorites.getTitle());
-            mReleaseDate.setText(favorites.getDate());
-            mRating.setText(favorites.getRating());
+            BackCover = favorites.getPoster();
+            FrontPoster = favorites.getThumb();
+            Title = favorites.getTitle();
+            Overview = favorites.getOverview();
+            Date = favorites.getDate();
+            Rating = favorites.getRating();
             isFav = true;
+            GlideUtils.getImage(getApplicationContext(), mMovieCover, BackCover, circularProgressDrawable);
+            GlideUtils.getImage(getApplicationContext(), mMovieThumb, FrontPoster, circularProgressDrawable);
+            mMovieOverview.setText(Overview);
+            mTitle.setText(Title);
+            mReleaseDate.setText(Date);
+            mRating.setText(Rating);
         }
     }
 
@@ -128,14 +128,14 @@ public class DetailsActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<DetailsResponse> call, @NonNull Response<DetailsResponse> response) {
                 DetailsResponse detailsResponse = response.body();
                 if (detailsResponse != null) {
-                    Thumbnail = getString(R.string.Image_Base_URL) + detailsResponse.getBackdrop();
-                    Cover = getString(R.string.Image_Base_URL) + detailsResponse.getPoster_path();
+                    FrontPoster = getString(R.string.Image_Base_URL) + detailsResponse.getPoster_path();
+                    BackCover = getString(R.string.Image_Base_URL) + detailsResponse.getBackdrop();
                     Overview = detailsResponse.getOverview();
                     Title = detailsResponse.getTitle();
                     Date = detailsResponse.getRealDate();
                     Rating = detailsResponse.getVote_average();
-                    GlideUtils.getImage(getApplicationContext(), mMovieCover, Thumbnail, circularProgressDrawable);
-                    GlideUtils.getImage(getApplicationContext(), mMovieThumb, Cover, circularProgressDrawable);
+                    GlideUtils.getImage(getApplicationContext(), mMovieCover, BackCover, circularProgressDrawable);
+                    GlideUtils.getImage(getApplicationContext(), mMovieThumb, FrontPoster, circularProgressDrawable);
                     mMovieOverview.setText(Overview);
                     mTitle.setText(Title);
                     mReleaseDate.setText(Date);
@@ -150,16 +150,16 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-    public void handleFavorite() {
+    private void handleFavorite() {
         mFavButton.setImageResource(R.drawable.ic_favorite_full);
-        Favorites favorites = new Favorites(movieId, Thumbnail, Cover, Overview, Rating, Date, Title, true);
+        Favorites favorites = new Favorites(movieId, BackCover, FrontPoster, Overview, Rating, Date, Title, true);
         AppExecutors.getInstance().getDiskIO().execute(() -> mDb.moviesDao().insertMovie(favorites));
     }
 
-    public void handleUnFavorite() {
+    private void handleUnFavorite() {
         mFavButton.setImageResource(R.drawable.ic_favorite_border);
         AppExecutors.getInstance().getDiskIO().execute(() -> mDb.moviesDao().deleteMovie(movieId));
-        isFav =false;
+        isFav = false;
     }
 
     @OnClick(R.id.movie_favorite_button)

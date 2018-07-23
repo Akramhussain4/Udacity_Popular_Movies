@@ -22,9 +22,9 @@ public class MoviesResponse implements Parcelable {
         return results;
     }
 
-    protected MoviesResponse(Parcel in) {
+    private MoviesResponse(Parcel in) {
         if (in.readByte() == 0x01) {
-            results = new ArrayList<Movies>();
+            results = new ArrayList<>();
             in.readList(results, Movies.class.getClassLoader());
         } else {
             results = null;
