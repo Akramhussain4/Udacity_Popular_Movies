@@ -38,11 +38,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.textView4)
+    TextView noFav;
     private MoviesInterface moviesInterface;
     private MoviesAdapter mAdapter;
     private ArrayList<Movies> movies;
-    @BindView(R.id.textView4)
-    TextView noFav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList("moviesList", movies);
-        outState.putParcelable("scrollPos",recyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable("scrollPos", recyclerView.getLayoutManager().onSaveInstanceState());
         super.onSaveInstanceState(outState);
     }
 
@@ -112,11 +112,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.onM
             case R.id.favorite:
                 MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
                 viewModel.getFavorites().observe(this, favorites1 -> {
-                    if(favorites1.size()!=0) {
+                    if (favorites1.size() != 0) {
                         FavoritesAdapter favoritesAdapter = new FavoritesAdapter(favorites1, MainActivity.this);
                         recyclerView.setAdapter(favoritesAdapter);
-                    }
-                    else {
+                    } else {
                         noFav.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.INVISIBLE);
                     }
