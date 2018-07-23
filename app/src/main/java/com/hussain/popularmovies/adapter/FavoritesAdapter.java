@@ -17,6 +17,7 @@ import com.github.florent37.glidepalette.GlidePalette;
 import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.model.Favorites;
 import com.hussain.popularmovies.ui.DetailsActivity;
+import com.hussain.popularmovies.utils.CircularProgress;
 import com.hussain.popularmovies.utils.GlideApp;
 
 import java.util.List;
@@ -43,14 +44,11 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Recy
 
     @Override
     public void onBindViewHolder(@NonNull final FavoritesAdapter.RecyclerViewHolder holder, int position) {
-        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
-        circularProgressDrawable.setStrokeWidth(15f);
-        circularProgressDrawable.setCenterRadius(50f);
-        circularProgressDrawable.start();
+        CircularProgressDrawable cp = CircularProgress.circularProgress(context);
         holder.mTitle.setText(movies.get(position).getTitle());
         GlideApp.with(context)
                 .load(movies.get(position).getThumb())
-                .placeholder(circularProgressDrawable)
+                .placeholder(cp)
                 .listener(GlidePalette.with(movies.get(position).getThumb())
                         .intoCallBack(palette -> {
                             Palette.Swatch swatch = palette.getVibrantSwatch();
