@@ -19,7 +19,7 @@ public interface MoviesDao {
     void insertMovie(Favorites movies);
 
     @Query("SELECT * FROM movies WHERE id = :id AND isfavorite = 1")
-    LiveData<Favorites> getFavorites(String id);
+    LiveData<List<Favorites>> getFavorites(String id);
 
     @Query("DELETE FROM movies WHERE id = :id")
     void deleteMovie(String id);
