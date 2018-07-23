@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hussain.popularmovies.BuildConfig;
 import com.hussain.popularmovies.R;
@@ -20,6 +21,7 @@ import com.hussain.popularmovies.database.ViewModelFactory;
 import com.hussain.popularmovies.model.DetailsResponse;
 import com.hussain.popularmovies.model.Favorites;
 import com.hussain.popularmovies.utils.AppExecutors;
+import com.hussain.popularmovies.utils.CircularProgress;
 import com.hussain.popularmovies.utils.GlideUtils;
 import com.hussain.popularmovies.utils.MoviesInterface;
 import com.hussain.popularmovies.utils.NetworkUtils;
@@ -61,10 +63,7 @@ public class DetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mDb = AppDatabase.getInstance(getApplicationContext());
         movieId = getIntent().getStringExtra("movieDetail");
-        circularProgressDrawable = new CircularProgressDrawable(this);
-        circularProgressDrawable.setStrokeWidth(15f);
-        circularProgressDrawable.setCenterRadius(50f);
-        circularProgressDrawable.start();
+        circularProgressDrawable = CircularProgress.circularProgress(this);
         checkIfFav();
     }
 
@@ -76,14 +75,19 @@ public class DetailsActivity extends AppCompatActivity {
                 mFavButton.setImageResource(R.drawable.ic_favorite_full);
                 isFav =true;
                 makeNetworkCall();
+                setFavorite(favorites);
+                Toast.makeText(this,"if #1",Toast.LENGTH_LONG).show();
             }
             else if(favorites!=null && !NetworkUtils.isNetworkAvailable(this)){
                 setFavorite(favorites);
+                Toast.makeText(this,"esle if #1",Toast.LENGTH_LONG).show();
             }
             else if (favorites == null && NetworkUtils.isNetworkAvailable(this)){
                 makeNetworkCall();
+                Toast.makeText(this,"esle if #2",Toast.LENGTH_LONG).show();
             }
             else {
+                Toast.makeText(this,"esle #1",Toast.LENGTH_LONG).show();
                 setFavorite(favorites);
             }
         });

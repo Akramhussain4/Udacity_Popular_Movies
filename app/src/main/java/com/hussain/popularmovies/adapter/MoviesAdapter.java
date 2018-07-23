@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.glidepalette.GlidePalette;
 import com.hussain.popularmovies.R;
 import com.hussain.popularmovies.model.Movies;
+import com.hussain.popularmovies.utils.CircularProgress;
 import com.hussain.popularmovies.utils.GlideApp;
 
 import java.util.List;
@@ -53,10 +54,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, int position) {
-        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
-        circularProgressDrawable.setStrokeWidth(15f);
-        circularProgressDrawable.setCenterRadius(50f);
-        circularProgressDrawable.start();
+        CircularProgressDrawable circularProgressDrawable = CircularProgress.circularProgress(context);
         holder.mTitle.setText(movies.get(position).getOriginalTitle());
         GlideApp.with(context)
                 .load(context.getString(R.string.Image_Base_URL) + movies.get(position).getPosterPath())
